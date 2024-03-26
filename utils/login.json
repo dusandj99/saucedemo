@@ -1,0 +1,17 @@
+[
+    {
+        "testName": "User can not login with invalid credentials",
+        "username": "wrongUsername",
+        "password": "wrongPassword"
+    },
+    {
+        "testName": "User can not login with invalid password",
+        "username": "standard_user",
+        "password": "wrongPassword"
+    },
+    {
+        "testName": "User can not login with invalid username",
+        "username": "wrongUsername",
+        "password": "secret_sauce"
+    }
+]
