@@ -22,10 +22,6 @@ test.beforeAll(async({ browser }) => {
   await loginPage.fillLoginForm('standard_user', 'secret_sauce');
 })
 
-  // test.beforeEach(async() => {
-  //     await productPage.goTo();
-  // })
-
   test('User can remove item from the cart from the products page', async () => {
     
     await productPage.clickItemButtonByName(itemName, productPage.action.add);
@@ -72,7 +68,7 @@ test.beforeAll(async({ browser }) => {
   });
 
   test.afterEach(async () => {
-    await productPage.goTo(); //ovde se vraca
+    await productPage.goTo(); 
     await cartPage.removeAllItemsFromCart();
   })
 

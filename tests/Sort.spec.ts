@@ -11,14 +11,9 @@ test.beforeAll(async({ browser }) => {
     page = await browser.newPage();
     loginPage = new Login(page);
     productsPage = new Products(page);
-  
-})
-
-test.beforeEach(async() => {
-
+    
     await loginPage.goTo();
     await loginPage.fillLoginForm('standard_user', 'secret_sauce');
-
 })
 
 test('User can sort items by price', async () => {
@@ -40,7 +35,6 @@ test('User can sort items by alphabetical order', async () => {
     await productsPage.selectFilter(productsPage.dropdown.zToa);
 
     let product_name_array = await productsPage.getProductElement('.inventory_item_name ');
-    //console.log(product_name_array);
     let sortedZtoA = product_name_array.sort(function(a, b){
         if(a < b) { return 1; }
         if(a > b) { return -1; }
@@ -52,6 +46,10 @@ test('User can sort items by alphabetical order', async () => {
     }
     expect(sorted).toBeTruthy();
 });
+
+test.afterEach(async () => {
+    await productsPage.goTo();
+})
 
 test.afterAll(async () => {
     await page.close();
