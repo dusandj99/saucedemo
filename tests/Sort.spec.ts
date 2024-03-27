@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { Login } from '../page-objects/Login';
 import { Products } from '../page-objects/Products';
+const data = JSON.parse(JSON.stringify(require('../utils/data.json')));
 
 let page:Page;
 let loginPage:Login;
@@ -13,14 +14,14 @@ test.beforeAll(async({ browser }) => {
     productsPage = new Products(page);
     
     await loginPage.goTo();
-    await loginPage.fillLoginForm('standard_user', 'secret_sauce');
+    await loginPage.fillLoginForm(data.credentials.username, data.credentials.password);
 })
 
 test('User can sort items by price', async () => {
 
     await productsPage.selectFilter(productsPage.dropdown.lowToHigh);
 
-    let prices_array = await productsPage.getProductElement('.inventory_item_price');
+    let prices_array = await productsPage.getProductPrice(); 
     let trimmedArray: number[] = prices_array.map((str) => str.substring(1)).map(str => parseFloat(str));
     let sorted = false;
 
@@ -34,12 +35,8 @@ test('User can sort items by alphabetical order', async () => {
     
     await productsPage.selectFilter(productsPage.dropdown.zToa);
 
-    let product_name_array = await productsPage.getProductElement('.inventory_item_name ');
-    let sortedZtoA = product_name_array.sort(function(a, b){
-        if(a < b) { return 1; }
-        if(a > b) { return -1; }
-        return 0;
-    })
+    let product_name_array = await productsPage.getProductName(); 
+    let sortedZtoA = await productsPage.sortProducts(product_name_array);
     let sorted = false;
     if(productsPage.arraysAreEqual(product_name_array, sortedZtoA)){
         sorted = true;

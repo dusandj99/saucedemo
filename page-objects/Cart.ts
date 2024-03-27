@@ -31,6 +31,10 @@ export class Cart {
         await this.getCartList().locator('.cart_item').first().waitFor();
     }
 
+    async waitForItemRemovalCart():Promise<void>{
+        await this.getCartList().locator('.cart_item').first().waitFor({state:"hidden"});
+    }
+
     async getCartItemByName(itemName:string):Promise<Locator | null>{
         let items = await this.getCartList().locator('.cart_item').all();
 

@@ -1,0 +1,14 @@
+{
+    "url": {
+        "baseUrl": "https://www.saucedemo.com/",
+        "inventoryUrl": "https://www.saucedemo.com/inventory.html",
+        "checkoutStepOneUrl": "https://www.saucedemo.com/checkout-step-one.html",
+        "checkoutStepTwoUrl": "https://www.saucedemo.com/checkout-step-two.html",
+        "checkoutCompleteUrl": "https://www.saucedemo.com/checkout-complete.html"
+    },
+    "credentials": {
+        "username": "standard_user",
+        "password": "secret_sauce"
+    }
+
+}

@@ -54,5 +54,10 @@ export class Login {
         await this.getPasswordInput().fill(password);
         await this.login();
     }
-    
+
+    async logOut():Promise<void> {
+        await this.getHamburgerIcon().click();
+        await this.getLogoutButton().click();
+    }
+
 }

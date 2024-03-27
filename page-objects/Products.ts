@@ -64,21 +64,40 @@ export class Products {
         }
     }
 
-    async getProductElement(selector:string):Promise<string[]>{
-        
+     async getProductName(){
         let items = await this.getInventoryItems().locator('.inventory_item').all();
         let prices:string[] = [];
 
         for(let i = 0; i < items.length; i++){
             let item = items[i];
-            let price = await item.locator(selector).textContent();
+            let price = await item.locator('.inventory_item_name ').textContent();
             prices[i] = price !== null ? price : '';
         }
         return prices;
-    }
+     }
+
+     async getProductPrice(){
+        let items = await this.getInventoryItems().locator('.inventory_item').all();
+        let prices:string[] = [];
+
+        for(let i = 0; i < items.length; i++){
+            let item = items[i];
+            let price = await item.locator('.inventory_item_price').textContent();
+            prices[i] = price !== null ? price : '';
+        }
+        return prices;
+     }
 
     async selectFilter(value:string):Promise<void>{
         await this.getSortDropdown().selectOption(value);
+    }
+
+    async sortProducts(products:string[]):Promise<string[]> {
+        return products.sort(function(a, b) {
+            if(a < b) { return 1; }
+            if(a > b) { return -1; }
+            return 0;
+        })
     }
 
     arraysAreEqual(array1, array2):boolean{

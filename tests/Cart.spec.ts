@@ -39,8 +39,7 @@ test.beforeAll(async({ browser }) => {
     await productPage.goToCart();
     await cartPage.waitForItemsFromCart();
     await cartPage.removeItemFromCart(itemName);
-
-    await cartPage.getCartList().locator('.cart_item').first().waitFor({state: 'hidden'});
+    await cartPage.waitForItemRemovalCart();
 
     let itemPresent = await cartPage.getCartItemByName(itemName);
     expect(itemPresent).toBeNull();
@@ -50,7 +49,7 @@ test.beforeAll(async({ browser }) => {
     
     await productPage.clickItemButtonByName(itemName, productPage.action.add);
     await productPage.goToCart();
-    await cartPage.getCartList().locator('.cart_item').first().waitFor();
+    await cartPage.waitForItemsFromCart();
   
     const item = await cartPage.getCartItemByName(itemName);
     expect(await item?.textContent()).toContain(itemName);

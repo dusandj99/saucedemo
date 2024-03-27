@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { Login } from '../page-objects/Login';
 const dataSet = JSON.parse(JSON.stringify(require('../utils/login.json')));
+const data = JSON.parse(JSON.stringify(require('../utils/data.json')));
 
 let page:Page;
 let loginPage:Login;
@@ -9,24 +10,22 @@ test.beforeAll(async({ browser }) => {
 
   page = await browser.newPage();
   loginPage = new Login(page);
-
+  await loginPage.goTo();
 })
 
 test('User can log in with valid credentials', async () => {
     
-    await loginPage.goTo();
-    await loginPage.fillLoginForm('standard_user', 'secret_sauce');
+    await loginPage.fillLoginForm(data.credentials.username, data.credentials.password);
 
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+    await expect(page).toHaveURL(data.url.inventoryUrl);
   });
 
-for(const data of dataSet){
-  test(data.testName, async () => {
+for(const testCase of dataSet){
+  test(testCase.testName, async () => {
 
-    await loginPage.goTo();
-    await loginPage.fillLoginForm(data.username, data.password);
+    await loginPage.fillLoginForm(testCase.username, testCase.password);
 
-    await expect(page).toHaveURL('https://www.saucedemo.com/');
+    await expect(page).toHaveURL(data.url.baseUrl);
     await expect(loginPage.getErrorMessage()).toHaveText('Epic sadface: Username and password do not match any user in this service');
 
   });
@@ -34,31 +33,28 @@ for(const data of dataSet){
 
 test('User can not log in with empty fields', async () => {
     
-  await loginPage.goTo();
   await loginPage.emptyLogin();
 
-  await expect(page).toHaveURL('https://www.saucedemo.com/');
+  await expect(page).toHaveURL(data.url.baseUrl);
   await expect(loginPage.getErrorMessage()).toHaveText('Epic sadface: Username is required');
 
 });
 
-test.afterAll(async () => {
-  await page.close();
-});
-
-//valid username-invalid password 4 -> 2
-//invlaid username-valid password 5 -> 2
-
 test('User can log out', async () => {
     
-  await loginPage.goTo();
-  await loginPage.fillLoginForm('standard_user', 'secret_sauce');
-  await loginPage.getHamburgerIcon().click();
-  await loginPage.getLogoutButton().click();
+  //await loginPage.goTo();
+  await loginPage.fillLoginForm(data.credentials.username, data.credentials.password);
+  await loginPage.logOut();
 
-  await expect(page).toHaveURL('https://www.saucedemo.com/');
+  await expect(page).toHaveURL(data.url.baseUrl);
 
 });
+
+test.afterEach(async() => {
+  if(page.url() !== data.url.baseUrl){
+    await loginPage.logOut();
+  }
+})
 
 test.afterAll(async () => {
   await page.close();

@@ -5,6 +5,7 @@ import { Cart } from '../page-objects/Cart';
 import { CheckoutForm } from '../page-objects/CheckoutForm';
 import { CheckoutOverview } from '../page-objects/CheckoutOverview';
 import { CheckoutComplete } from '../page-objects/CheckoutComplete';
+const data = JSON.parse(JSON.stringify(require('../utils/data.json')));
 
 const itemName = 'Sauce Labs Bike Light';
 const secondItemName = 'Sauce Labs Bolt T-Shirt';
@@ -41,7 +42,7 @@ test('User can proceed to checkout with an item', async () => {
     await productPage.clickItemButtonByName(itemName, productPage.action.add);
     await productPage.goToCart();
     await cartPage.checkout();
-    expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-one.html');
+    expect(page).toHaveURL(data.url.checkoutStepOneUrl);
 });
 
 test('User can proceed to purchase overview by filling the form with valid data', async () => {
@@ -53,7 +54,7 @@ test('User can proceed to purchase overview by filling the form with valid data'
     await checkoutPage.fillCheckoutForm('Random','Blank','10000');
     await checkoutPage.continueWithCheckout();
 
-    expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html');
+    expect(page).toHaveURL(data.url.checkoutStepTwoUrl);
 });
 
 test('Correct items are being presented in the checkout overview', async () => {
@@ -65,7 +66,7 @@ test('Correct items are being presented in the checkout overview', async () => {
     await checkoutPage.fillCheckoutForm('Random','Blank','10000');
     await checkoutPage.continueWithCheckout();
 
-    expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html');
+    expect(page).toHaveURL(data.url.checkoutStepTwoUrl);
     expect(await checkoutOverview.isItemInOverview(itemName)).toBeTruthy();
 });
 
@@ -90,14 +91,13 @@ test('User can complete the purchase of and item', async () => {
     await checkoutPage.fillCheckoutForm('Random','Blank','10000');
     await checkoutPage.continueWithCheckout();
     await checkoutOverview.finishCheckout(); 
-    expect(page).toHaveURL('https://www.saucedemo.com/checkout-complete.html');
+    expect(page).toHaveURL(data.url.checkoutCompleteUrl);
     expect(await checkoutComplete.getOrderMessage().textContent()).toContain('Thank you for your order!');
 });
 
 test('Price of added items in checkout overview is correct', async() => {
 
     await productPage.clickItemButtonByName(itemName, productPage.action.add);
-    await page.waitForTimeout(500);
     await productPage.clickItemButtonByName(secondItemName, productPage.action.add);
     await productPage.goToCart();
     await cartPage.checkout();
