@@ -22,21 +22,14 @@ test.beforeAll(async({ browser }) => {
   await loginPage.fillLoginForm('standard_user', 'secret_sauce');
 })
 
-// test.beforeEach(async() => {
-
-//   await loginPage.goTo();
-//   await loginPage.fillLoginForm('standard_user', 'secret_sauce');
-
-// })
+  // test.beforeEach(async() => {
+  //     await productPage.goTo();
+  // })
 
   test('User can remove item from the cart from the products page', async () => {
     
     await productPage.clickItemButtonByName(itemName, productPage.action.add);
-
-    const removeButton = await productPage.getProductButtonByName(itemName);
-    await removeButton?.waitFor({state: 'visible'});
     await productPage.clickItemButtonByName(itemName, productPage.action.remove);
-    await removeButton?.waitFor({state: 'hidden'});
 
     await productPage.goToCart();
     let itemPresent = await cartPage.getCartItemByName(itemName);
@@ -48,7 +41,7 @@ test.beforeAll(async({ browser }) => {
 
     await productPage.clickItemButtonByName(itemName, productPage.action.add);
     await productPage.goToCart();
-    await cartPage.getCartList().locator('.cart_item').first().waitFor();
+    await cartPage.waitForItemsFromCart();
     await cartPage.removeItemFromCart(itemName);
 
     await cartPage.getCartList().locator('.cart_item').first().waitFor({state: 'hidden'});
@@ -57,17 +50,7 @@ test.beforeAll(async({ browser }) => {
     expect(itemPresent).toBeNull();
   });
 
-  test('Number of items in cart is correct', async () => {
-
-    expect(await page.locator('.shopping_cart_badge').count()).toEqual(0);
-
-    await productPage.clickItemButtonByName(itemName, productPage.action.add);
-    await productPage.clickItemButtonByName(itemNameSecond, productPage.action.add);
-
-    expect(await cartPage.getShoppingCartBadge()).toHaveText('2');
-  });
-
-  test.only('User can add item to cart', async () => {
+  test('User can add item to cart', async () => {
     
     await productPage.clickItemButtonByName(itemName, productPage.action.add);
     await productPage.goToCart();
@@ -78,10 +61,20 @@ test.beforeAll(async({ browser }) => {
   
   });
 
-  // test.afterEach(async () => {
-  //   await productPage.goToCart();
-  //   await cartPage.removeAllItemsFromCart();
-  // })
+  test('Number of items in cart is correct', async () => {
+
+    expect(await cartPage.getShoppingCartBadge().count()).toEqual(0);
+
+    await productPage.clickItemButtonByName(itemName, productPage.action.add);
+    await productPage.clickItemButtonByName(itemNameSecond, productPage.action.add);
+
+    expect( cartPage.getShoppingCartBadge()).toHaveText('2');
+  });
+
+  test.afterEach(async () => {
+    await productPage.goTo(); //ovde se vraca
+    await cartPage.removeAllItemsFromCart();
+  })
 
   test.afterAll(async () => {
     await page.close();

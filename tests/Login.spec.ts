@@ -21,7 +21,7 @@ test('User can log in with valid credentials', async () => {
   });
 
 for(const data of dataSet){
-  test( data.testName , async () => {
+  test(data.testName, async () => {
 
     await loginPage.goTo();
     await loginPage.fillLoginForm(data.username, data.password);
@@ -48,3 +48,18 @@ test.afterAll(async () => {
 
 //valid username-invalid password 4 -> 2
 //invlaid username-valid password 5 -> 2
+
+test('User can log out', async () => {
+    
+  await loginPage.goTo();
+  await loginPage.fillLoginForm('standard_user', 'secret_sauce');
+  await loginPage.getHamburgerIcon().click();
+  await loginPage.getLogoutButton().click();
+
+  await expect(page).toHaveURL('https://www.saucedemo.com/');
+
+});
+
+test.afterAll(async () => {
+  await page.close();
+});

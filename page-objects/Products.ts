@@ -37,31 +37,19 @@ export class Products {
     }
 
     //---------
-    async goTo()
+    async goTo():Promise<void>
     {
         await this.page.goto("https://www.saucedemo.com/inventory.html");
+        await this.page.waitForLoadState('networkidle');
     }
 
-    async goToCart(){
+    async goToCart():Promise<void>{
         await this.getCardButton().click();
     }
 
-    async getProductButtonByName(itemName:string){
-        let items = await this.getInventoryItems().locator('.inventory_item').all();
-
-        for(let i = 0; i < items.length; i++){
-            let item = items[i];
-            let itemText = await item.locator('.inventory_item_name ').textContent();
-            if(itemText === itemName){
-                itemText = itemText.toLowerCase().replace(/ /g,'-');
-                return item.locator(`#remove-${itemText}`);
-            }
-        }
-        return null;
-    }
-
-    async clickItemButtonByName(itemName:string, action:string){
+    async clickItemButtonByName(itemName:string, action:string):Promise<void>{
         
+        await this.getInventoryItems().locator('.inventory_item').first().waitFor({state: 'visible'});
         let items = await this.getInventoryItems().locator('.inventory_item').all();
 
         for(let i = 0; i < items.length; i++){
@@ -76,7 +64,7 @@ export class Products {
         }
     }
 
-    async getProductElement(selector:string){
+    async getProductElement(selector:string):Promise<string[]>{
         
         let items = await this.getInventoryItems().locator('.inventory_item').all();
         let prices:string[] = [];
@@ -89,11 +77,11 @@ export class Products {
         return prices;
     }
 
-    async selectFilter(value:string){
+    async selectFilter(value:string):Promise<void>{
         await this.getSortDropdown().selectOption(value);
     }
 
-    arraysAreEqual(array1, array2){
+    arraysAreEqual(array1, array2):boolean{
         if (array1.length !== array2.length) {
             return false;
         }

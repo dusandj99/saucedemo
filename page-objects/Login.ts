@@ -23,28 +23,36 @@ export class Login {
     public getErrorMessage():Locator {
         return this.page.locator('h3');
     }
+
+    public getHamburgerIcon():Locator {
+        return this.page.locator('#react-burger-menu-btn');
+    }
+
+    public getLogoutButton():Locator {
+        return this.page.locator('#logout_sidebar_link');
+    }
     //------
 
-    async goTo()
+    async goTo():Promise<void>
     {
         await this.page.goto("https://www.saucedemo.com/");
     }
 
-    async login(){
+    async login():Promise<void>{
         await this.getLoginButton().click();
         await this.page.waitForLoadState('networkidle');
     }
 
-    async emptyLogin(){
+    async emptyLogin():Promise<void>{
         await this.getUsernameInput().clear();
         await this.getPasswordInput().clear();
         await this.login();
     }
 
-    async fillLoginForm(username: string, password:string){
+    async fillLoginForm(username: string, password:string):Promise<void>{
         await this.getUsernameInput().fill(username);
         await this.getPasswordInput().fill(password);
         await this.login();
     }
- 
+    
 }

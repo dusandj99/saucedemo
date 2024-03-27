@@ -24,7 +24,7 @@ export class CheckoutOverview {
 
     //-----
 
-    async finishCheckout(){
+    async finishCheckout():Promise<void>{
         await this.getFinishButton().click();
     }
 
@@ -38,7 +38,7 @@ export class CheckoutOverview {
         return false;
     }
 
-    async getOverviewTotalPrice(){
+    async getOverviewTotalPrice():Promise<number>{
         let overviewItems = await this.getCartList().locator('.inventory_item_price').all();
         let total = 0;
         for(let i = 0; i < overviewItems.length; i++){

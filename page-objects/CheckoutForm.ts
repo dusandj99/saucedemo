@@ -32,18 +32,18 @@ export class CheckoutForm {
 
     //-----
 
-    async continueWithCheckout(){
+    async continueWithCheckout():Promise<void>{
         await this.getContinueButton().click();
     }
 
-    async fillCheckoutForm(firstname:string, lastname:string, zip:string){
+    async fillCheckoutForm(firstname:string, lastname:string, zip:string):Promise<void>{
 
         await this.getFirstnameInput().fill(firstname);
         await this.getLastnameInput().fill(lastname);
         await this.getZipInput().fill(zip);
     }
     
-    async emptyCheckoutForm(){
+    async emptyCheckoutForm():Promise<void>{
         await this.getFirstnameInput().clear();
         await this.getLastnameInput().clear();
         await this.continueWithCheckout();

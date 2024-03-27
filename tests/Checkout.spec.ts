@@ -29,7 +29,7 @@ test.beforeAll(async({ browser }) => {
 
 })
 
-test.beforeEach(async() => {
+test.beforeAll(async() => {
 
     await loginPage.goTo();
     await loginPage.fillLoginForm('standard_user', 'secret_sauce');
@@ -107,12 +107,17 @@ test('Price of added items in checkout overview is correct', async() => {
     let totalPrice = await checkoutOverview.getItemTotal().textContent();
     let trimmedPrice = 0;
     if (totalPrice !== null && totalPrice !== undefined) {
-        trimmedPrice = parseFloat(totalPrice?.slice(totalPrice.indexOf('$') + 1));
+        trimmedPrice = parseFloat(totalPrice.slice(totalPrice.indexOf('$') + 1));
     }
 
     let calculatedPrice = await checkoutOverview.getOverviewTotalPrice();
-    await expect(trimmedPrice).toEqual(calculatedPrice);
+    expect(trimmedPrice).toEqual(calculatedPrice);
 })
+
+  test.afterEach(async () => {
+    await productPage.goTo();
+    await cartPage.removeAllItemsFromCart();
+  })
 
 test.afterAll(async () => {
     await page.close();

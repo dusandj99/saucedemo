@@ -20,7 +20,7 @@ export class CheckoutComplete {
 
     //-----
 
-    async backHome(){
+    async backHome():Promise<void>{
         await this.getBackButtom().click();
     }
 

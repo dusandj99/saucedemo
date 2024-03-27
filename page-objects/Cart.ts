@@ -21,9 +21,17 @@ export class Cart {
         return this.page.locator('.shopping_cart_badge');
     }
 
+    public async getRemoveButtons():Promise<Locator[]>{
+        return this.page.getByText('Remove').all();
+    }
+
     //-----
 
-    async getCartItemByName(itemName:string){
+    async waitForItemsFromCart():Promise<void>{
+        await this.getCartList().locator('.cart_item').first().waitFor();
+    }
+
+    async getCartItemByName(itemName:string):Promise<Locator | null>{
         let items = await this.getCartList().locator('.cart_item').all();
 
         for(let i = 0; i < items.length; i++){
@@ -36,21 +44,20 @@ export class Cart {
         return null;
     }
 
-    async removeItemFromCart(itemName:string){
+    async removeItemFromCart(itemName:string):Promise<void>{
 
         let item = await this.getCartItemByName(itemName);
         item?.getByRole('button', { name: 'Remove'}).click();
     }
 
-    async removeAllItemsFromCart(){
-        await this.page.waitForSelector('.cart_list');
-        let items = await this.getCartList().locator('.cart_item').all();
+    async removeAllItemsFromCart():Promise<void>{
+        let items = await this.getRemoveButtons();
         for(let i = 0; i < items.length; i++){
-            items[i].locator('button').click();
+            items[i].click();
         }
     }
 
-    async checkout(){
+    async checkout():Promise<void>{
         await this.getCheckoutButton().click();
     }
     
