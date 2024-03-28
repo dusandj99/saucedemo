@@ -66,15 +66,26 @@ export class Products {
 
      async getProductName(){
         let items = await this.getInventoryItems().locator('.inventory_item').all();
-        let prices:string[] = [];
+        let names:string[] = [];
 
         for(let i = 0; i < items.length; i++){
             let item = items[i];
-            let price = await item.locator('.inventory_item_name ').textContent();
-            prices[i] = price !== null ? price : '';
+            let name = await item.locator('.inventory_item_name ').textContent();
+            names[i] = name !== null ? name : '';
         }
-        return prices;
+        return names;
      }
+
+    //  async clickOnItem(){
+    //     let items = await this.getInventoryItems().locator('.inventory_item').all();
+
+    //     for(let i = 0; i < items.length; i++){
+    //         let item = items[i];
+    //         let price = await item.locator('.inventory_item_name ').textContent();
+    //         prices[i] = price !== null ? price : '';
+    //     }
+    //     return prices;
+    //  }
 
      async getProductPrice(){
         let items = await this.getInventoryItems().locator('.inventory_item').all();

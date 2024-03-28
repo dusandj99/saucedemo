@@ -1,0 +1,36 @@
+{
+    "loginPayload": {
+        "username" : "admin",
+        "password" : "password123"
+    },
+
+    "createBookingPayload": {
+            "firstname" : "Jim",
+            "lastname" : "Brown",
+            "totalprice" : 111,
+            "depositpaid" : true,
+            "bookingdates" : {
+                "checkin" : "2018-01-01",
+                "checkout" : "2019-01-01"
+            },
+            "additionalneeds" : "Breakfast"
+    },
+
+    "updateBookingPayload": {
+        "firstname" : "UpdatedJim",
+        "lastname" : "UpdatedBrown",
+        "totalprice" : 200,
+        "depositpaid" : false,
+        "bookingdates" : {
+            "checkin" : "2018-01-01",
+            "checkout" : "2019-01-01"
+        },
+        "additionalneeds" : "Gym"
+    },
+
+    "partialUpdatePayload": {
+            "firstname" : "PartialJim",
+            "lastname" : "PartialBrown",
+            "totalprice": 800
+    }
+}
