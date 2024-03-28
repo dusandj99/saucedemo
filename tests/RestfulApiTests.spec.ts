@@ -143,7 +143,7 @@ test('Restful Booker API flow', async() => {
 })
 
 for(const testCasePayload of createBookingDD){
-    test.only(`Create booking endpoint:${testCasePayload.testName}`, async () => {
+    test(`Create booking endpoint:${testCasePayload.testName}`, async () => {
 
         let payload = {
             firstname : testCasePayload.firstname,
