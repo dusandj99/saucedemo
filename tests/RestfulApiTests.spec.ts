@@ -2,12 +2,13 @@ import { test, expect, type Page, request } from '@playwright/test';
 import Ajv from "ajv";
 const schemas = JSON.parse(JSON.stringify(require('../utils/schemas.json')));
 const payloads = JSON.parse(JSON.stringify(require('../utils/payloads.json')));
+const createBookingDD = JSON.parse(JSON.stringify(require('../utils/createBooking.json')));
 
 const baseUrl = 'https://restful-booker.herokuapp.com';
 const ajv = new Ajv();
 let validate;
 
-test.only('Restful Booker API flow', async() => {
+test('Restful Booker API flow', async() => {
 
     const apiContext = await request.newContext();
 
@@ -37,7 +38,7 @@ test.only('Restful Booker API flow', async() => {
     const bookingId:number = createBookingResponseJson.bookingid; //bookingid for search
 
     expect(validate(createBookingResponseJson)).toBeTruthy(); // schema validation
-    expect(loginResponse.status()).toEqual(200); // status 
+    expect(createBookingResponse.status()).toEqual(200); // status 
     expect(createBookingResponseJson.booking).toEqual(payloads.createBookingPayload); //data validation
 
     //------- getAllBookings -find createdBooking
@@ -140,3 +141,50 @@ test.only('Restful Booker API flow', async() => {
     expect((await getBookingResponse.body()).toString()).toEqual('Not Found'); // message 
 
 })
+
+for(const testCasePayload of createBookingDD){
+    test.only(`Create booking endpoint:${testCasePayload.testName}`, async () => {
+
+        let payload = {
+            firstname : testCasePayload.firstname,
+            lastname : testCasePayload.lastname,
+            totalprice : testCasePayload.totalprice,
+            depositpaid : testCasePayload.depositpaid,
+            bookingdates : {
+                checkin : testCasePayload.bookingdates.checkin,
+                checkout : testCasePayload.bookingdates.checkout
+            },
+            additionalneeds : testCasePayload.additionalneeds
+        }
+        //------- createBooking
+        const apiContext = await request.newContext();
+
+        let createBookingResponse =  await apiContext.post(`${baseUrl}/booking`, {data: payload}); //dd
+        let createBookingResponseJson;
+        let bookingId:number;
+        if(!testCasePayload.negativeTest){
+            createBookingResponseJson = await createBookingResponse.json();
+            bookingId = createBookingResponseJson.bookingid; //bookingid for search
+            
+            let getBookingResponse =  await apiContext.get(`${baseUrl}/booking/${bookingId}`); // find created booking
+            let getBookingResponseJson = await getBookingResponse.json();
+
+            validate = ajv.compile(schemas.getBookingSchema);
+
+            expect(validate(getBookingResponseJson)).toBeTruthy(); //schema validation
+            expect(getBookingResponse.status()).toEqual(200); //status 
+            expect(getBookingResponseJson).toEqual(payload); //data validation from create req body
+        }
+        
+        validate = ajv.compile(schemas.createBookingSchema);
+
+        if(!testCasePayload.negativeTest){
+            expect(validate(createBookingResponseJson)).toBeTruthy(); // schema validation
+            expect(createBookingResponse.status()).toEqual(200); // status 
+            expect(createBookingResponseJson.booking).toEqual(payload); //data validation
+        } else {
+            expect(createBookingResponse.status()).toEqual(500); // status 
+            expect((await createBookingResponse.body()).toString()).toEqual('Internal Server Error'); // message 
+        }
+    })
+}

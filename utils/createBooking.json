@@ -1,0 +1,79 @@
+[
+    {
+        "testName" : "Valid request body 1",
+        "negativeTest": false,
+        "firstname" : "Jim",
+        "lastname" : "Brown",
+        "totalprice" : 111,
+        "depositpaid" : true,
+        "bookingdates" : {
+            "checkin" : "2018-01-01",
+            "checkout" : "2019-01-01"
+        },
+        "additionalneeds" : "Breakfast"
+    },
+    {
+        "testName" : "Valid request body 2",
+        "negativeTest": false,
+        "firstname" : "Jackie",
+        "lastname" : "Blue",
+        "totalprice" : 200,
+        "depositpaid" : true,
+        "bookingdates" : {
+            "checkin" : "2018-01-02",
+            "checkout" : "2019-01-02"
+        },
+        "additionalneeds" : "Dinner"
+    },
+    {
+        "testName" : "Valid request body 3",
+        "negativeTest": false,
+        "firstname" : "Will",
+        "lastname" : "Smith",
+        "totalprice" : 99,
+        "depositpaid" : false,
+        "bookingdates" : {
+            "checkin" : "2018-01-02",
+            "checkout" : "2019-01-02"
+        },
+        "additionalneeds" : "Sports"
+    },
+    {   
+        "testName" : "Empty request body",
+        "negativeTest": false,
+        "firstname" : "",
+        "lastname" : "",
+        "totalprice" : 0,
+        "depositpaid" : false,
+        "bookingdates" : {
+            "checkin" : "2018-01-02",
+            "checkout" : "2019-01-02"
+        },
+        "additionalneeds" : ""
+    },
+    {   
+        "testName" : "Integer as firstname",
+        "negativeTest": true,
+        "firstname" : 20,
+        "lastname" : "Smith",
+        "totalprice" : 99,
+        "depositpaid" : false,
+        "bookingdates" : {
+            "checkin" : "2018-01-02",
+            "checkout" : "2019-01-02"
+        },
+        "additionalneeds" : "Sports"
+    },
+    {   
+        "testName" : "Missing last name",
+        "negativeTest": true,
+        "firstname" : "Will",
+        "totalprice" : 99,
+        "depositpaid" : false,
+        "bookingdates" : {
+            "checkin" : "2018-01-02",
+            "checkout" : "2019-01-02"
+        },
+        "additionalneeds" : "Sports"
+    }
+]
